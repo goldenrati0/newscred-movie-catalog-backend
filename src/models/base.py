@@ -2,6 +2,7 @@
 Define an Abstract Base Class (ABC) for models
 """
 from datetime import datetime
+from typing import List
 
 from sqlalchemy import inspect
 
@@ -17,6 +18,7 @@ class BaseModel():
 
     print_filter = ()
     to_json_filter = ()
+    non_updatable_column = ("email", "id", "_created_at", "_updated_at")
 
     def __repr__(self):
         """ Define a base way to print models
@@ -27,10 +29,19 @@ class BaseModel():
             if column not in self.print_filter
         })
 
+    def updatable_columns(self) -> List[str]:
+        """ Columns that are valid for updating
+                    Columns that starts with _ or rel_, are ignored """
+        return [
+            column
+            for column in self._to_dict().keys()
+            if column not in self.non_updatable_column and not column.startswith("_") and not column.startswith("rel_")
+        ]
+
     @property
     def json(self):
         """ Define a base way to jsonify models
-            Columns inside `to_json_filter` are excluded """
+            Columns that starts with _ or rel_, are ignored """
         return {
             column: value
             if not isinstance(value, datetime) else value.strftime('%Y-%m-%d')
