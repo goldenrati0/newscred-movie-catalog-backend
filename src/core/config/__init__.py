@@ -5,6 +5,7 @@ from typing import Dict, Any
 
 
 class FlaskConfig:
+    APPLICATION_ROOT: str = "/api"
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "DEV")
     SECRET_KEY: str = os.getenv("SECRET_KEY",
                                 "".join([
@@ -61,6 +62,7 @@ class OMDBClientConfig:
 
 
 class Configuration:
+    APPLICATION_ROOT: str = FlaskConfig.APPLICATION_ROOT
     ENV: str = FlaskConfig.ENVIRONMENT
     DEBUG: bool = FlaskConfig.ENVIRONMENT == "DEV"
     SECRET_KEY: str = FlaskConfig.SECRET_KEY
