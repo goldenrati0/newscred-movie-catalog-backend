@@ -26,6 +26,9 @@ class User(db.Model, BaseModel):
         self._password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
         self.avatar_url = kwargs.get("avatar_url", Generator.gravatar_url(self.email))
 
+    def check_password(self, password: str):
+        return bcrypt.checkpw(password=password.encode(), hashed_password=self._password.encode())
+
 
 class FavoriteMovie(db.Model, BaseModel):
     __tablename__ = "favorite_movie"
