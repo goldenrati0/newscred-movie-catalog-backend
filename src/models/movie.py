@@ -16,7 +16,7 @@ class Movie(object):
         self.poster = poster
 
         for key in kwargs:
-            if hasattr(self, key) or hasattr(self, key.lower()):
+            if not hasattr(self, key) and not hasattr(self, key.lower()):
                 setattr(self, key, kwargs[key])
 
     def to_dict(self):
