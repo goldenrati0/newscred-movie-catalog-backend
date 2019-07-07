@@ -7,6 +7,7 @@ from ..core.config import Configuration
 
 RDS_CLIENT = Redis(host=Configuration.REDIS_HOST, port=Configuration.REDIS_PORT, db=Configuration.REDIS_DB,
                    password=Configuration.REDIS_PASSWORD)
+DEFAULT_EXPIRATION_TIME = 10 * 24 * 60 * 60  # 10 days
 
 
 class RedisUtilities:
@@ -20,4 +21,4 @@ class RedisUtilities:
 
     @staticmethod
     def set_item(key: str, data) -> bool:
-        return RDS_CLIENT.set(name=key, value=pickle.dumps(data), ex=None)
+        return RDS_CLIENT.set(name=key, value=pickle.dumps(data), ex=DEFAULT_EXPIRATION_TIME)
