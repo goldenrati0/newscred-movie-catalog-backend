@@ -1,18 +1,13 @@
 import os
-import random
-import string
 from typing import Dict, Any
+
+from ...utils import Generator
 
 
 class FlaskConfig:
     APPLICATION_ROOT: str = "/api"
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "DEV")
-    SECRET_KEY: str = os.getenv("SECRET_KEY",
-                                "".join([
-                                    random.choice(
-                                        string.ascii_letters + string.digits
-                                    )
-                                    for i in range(100)]))
+    SECRET_KEY: str = os.getenv("SECRET_KEY", Generator.random_string_generator(length=100, punctuation=False))
 
 
 class Database:
