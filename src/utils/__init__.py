@@ -1,4 +1,6 @@
 import hashlib
+import random
+import string
 from http import HTTPStatus
 from typing import Union, List, Any, Dict
 
@@ -13,6 +15,25 @@ class Generator(object):
     def gravatar_url(email: str) -> str:
         return "https://www.gravatar.com/avatar/" + hashlib.md5(
             email.lower().encode()).hexdigest() + "?" + f"s={Generator.__GRAVATAR_DEFAULT_SIZE}" + "&" + f"d={Generator.__GRAVATAR_DEFAULT_URL}"
+
+    @staticmethod
+    def random_string_generator(length: int, lowercase: bool = True, uppercase: bool = True, punctuation: bool = True,
+                                digits: bool = True, separator: str = "") -> str:
+        characters = ""
+        if lowercase:
+            characters += string.ascii_lowercase
+        if uppercase:
+            characters += string.ascii_uppercase
+        if punctuation:
+            characters += string.punctuation
+        if digits:
+            characters += string.digits
+
+        return separator.join([
+            random.choice(
+                characters
+            ) for _ in range(length)
+        ])
 
 
 class ResponseGenerator:
