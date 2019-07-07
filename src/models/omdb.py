@@ -57,3 +57,15 @@ class OMDBClient(object):
 
         movies = MovieFactory.get_movies(data["Search"])
         return movies
+
+    def get_full_movie_info(self, imdb_id: str, plot: str = "full", type: str = "movie") -> Dict:
+        url = self._base_url
+        params = {
+            "apikey": self._apikey,
+            "i": imdb_id,
+            "plot": plot,
+            "type": type
+        }
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        return response.json()
