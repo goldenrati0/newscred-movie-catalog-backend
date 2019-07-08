@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from typing import Dict, Any
 
 from ...utils import Generator
@@ -44,6 +45,18 @@ class RedisConfig:
     _flask_limiter_db_num = int(os.getenv("LIMITER_CACHING_DB_NUM", "5"))
 
 
+class FlaskJWTExtendedConfig:
+    JWT_TOKEN_LOCATION: str = ("headers", "query_string")
+    JWT_HEADER_NAME: str = "Authorization"
+    JWT_HEADER_TYPE: str = "Bearer"
+    JWT_QUERY_STRING_NAME: str = "token"
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(weeks=4)
+    JWT_ALGORITHM: str = "RS512"
+    JWT_SECRET_KEY: str = Generator.random_string_generator(length=150)
+    JWT_BLACKLIST_ENABLED: bool = False
+
+
 class FlaskCachingConfig:
     _cache_redis_url: str = f"redis://:{RedisConfig._redis_password}@{RedisConfig._redis_host}:{RedisConfig._redis_port}/{RedisConfig._flask_caching_db_num}"
 
@@ -57,10 +70,13 @@ class OMDBClientConfig:
 
 
 class Configuration:
+    # application config
     APPLICATION_ROOT: str = FlaskConfig.APPLICATION_ROOT
     ENV: str = FlaskConfig.ENVIRONMENT
     DEBUG: bool = FlaskConfig.ENVIRONMENT == "DEV"
     SECRET_KEY: str = FlaskConfig.SECRET_KEY
+
+    # sqlalchemy config
     SQLALCHEMY_DATABASE_URI: str = SQLAlchemyConfig.database_uri
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = SQLAlchemyConfig.track_modifications
     SQLALCHEMY_ECHO: bool = SQLAlchemyConfig.echo
@@ -69,11 +85,30 @@ class Configuration:
     SQLALCHEMY_POOL_SIZE: int = SQLAlchemyConfig.pool_size
     SQLALCHEMY_POOL_RECYCLE: int = SQLAlchemyConfig.pool_recycle
     SQLALCHEMY_ENGINE_OPTIONS: Dict[str, Any] = SQLAlchemyConfig.engine_options
+
+    # caching config
     CACHE_REDIS_URL: str = FlaskCachingConfig._cache_redis_url
+
+    # limiter config
     LIMITER_STORAGE_URI: str = FlaskLimiterConfig._redis_storage_url
+
+    # redis config
     REDIS_HOST = RedisConfig._redis_host
     REDIS_PORT = RedisConfig._redis_port
     REDIS_PASSWORD = RedisConfig._redis_password
     REDIS_DEFAULT_EXPIRATION_TIME = RedisConfig._redis_default_exp_time
     REDIS_DB = RedisConfig._default_db_num
+
+    # omdb config
     OMDB_API_KEY: str = OMDBClientConfig.api_key
+
+    # jwt token config
+    JWT_TOKEN_LOCATION = FlaskJWTExtendedConfig.JWT_TOKEN_LOCATION
+    JWT_HEADER_NAME = FlaskJWTExtendedConfig.JWT_HEADER_NAME
+    JWT_HEADER_TYPE = FlaskJWTExtendedConfig.JWT_HEADER_TYPE
+    JWT_QUERY_STRING_NAME = FlaskJWTExtendedConfig.JWT_QUERY_STRING_NAME
+    JWT_ACCESS_TOKEN_EXPIRES = FlaskJWTExtendedConfig.JWT_ACCESS_TOKEN_EXPIRES
+    JWT_REFRESH_TOKEN_EXPIRES = FlaskJWTExtendedConfig.JWT_REFRESH_TOKEN_EXPIRES
+    JWT_ALGORITHM = FlaskJWTExtendedConfig.JWT_ALGORITHM
+    JWT_SECRET_KEY = FlaskJWTExtendedConfig.JWT_SECRET_KEY
+    JWT_BLACKLIST_ENABLED = FlaskJWTExtendedConfig.JWT_BLACKLIST_ENABLED
