@@ -1,6 +1,6 @@
 from typing import List, Dict, Set
 
-from ..models import User
+from ..models import User, FavoriteMovie
 
 
 class UserRepository(object):
@@ -37,6 +37,11 @@ class UserRepository(object):
         return User.query.filter(
             User.email == email
         ).first()
+
+    @staticmethod
+    def add_user_favorite_movie(user: User, imdb_id: str):
+        fav_movie = FavoriteMovie(user_id=user.id, imdb_id=imdb_id)
+        fav_movie.save()
 
     @staticmethod
     def get_favorite_movies(user: User) -> Set[str]:

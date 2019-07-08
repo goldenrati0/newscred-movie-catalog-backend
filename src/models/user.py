@@ -39,3 +39,8 @@ class FavoriteMovie(db.Model, BaseModel):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     user_id = db.Column(db.BigInteger, db.ForeignKey("user.id"))
     imdb_movie_id = db.Column(db.String(20), nullable=False, index=True)
+
+    def __init__(self, user_id, imdb_id):
+        super(FavoriteMovie, self).__init__()
+        self.user_id = user_id
+        self.imdb_movie_id = imdb_id
