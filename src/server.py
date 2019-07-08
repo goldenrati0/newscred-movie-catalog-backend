@@ -3,6 +3,7 @@ from src.core.flask_app import jwt
 from src.models.user import User
 from src.repository.user import UserRepository
 from src.resource.user import user_blueprint
+from src.resource.search import search_blueprint
 from src.utils import ResponseGenerator
 
 
@@ -22,3 +23,4 @@ def home():
 
 
 app.register_blueprint(user_blueprint)
+app.register_blueprint(search_blueprint)
