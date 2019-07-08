@@ -24,7 +24,7 @@ class User(db.Model, BaseModel):
         self.name = name
         self.email = email
         self._password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-        self.avatar_url = kwargs.get("avatar_url", Generator.gravatar_url(self.email))
+        self.avatar = kwargs.get("avatar_url", Generator.gravatar_url(self.email))
 
     def __repr__(self):
         return "User::{}".format(self.id)

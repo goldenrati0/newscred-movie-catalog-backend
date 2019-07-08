@@ -53,7 +53,7 @@ class FlaskJWTExtendedConfig:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(weeks=4)
     JWT_ALGORITHM: str = "HS512"
-    JWT_SECRET_KEY: str = Generator.random_string_generator(length=150)
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "s3cr3t_key_change_it")
     JWT_BLACKLIST_ENABLED: bool = False
 
 
