@@ -1,6 +1,6 @@
 from .flask_app import jwt
-from ..models.user import User
-from ..repository.user import UserRepository
+from ..models import User
+from ..repository import UserRepository
 from ..utils import ResponseGenerator
 
 

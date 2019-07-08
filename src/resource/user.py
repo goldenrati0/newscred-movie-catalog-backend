@@ -46,3 +46,4 @@ class UserProfile(Resource):
 
 
 api.add_resource(UserLogin, "/login")
+api.add_resource(UserProfile, "/me")
