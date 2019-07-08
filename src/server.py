@@ -1,8 +1,8 @@
-from src.core import app
+from src.core.database import app
 from src.core.flask_app import jwt
-from src.models import User
-from src.repository import UserRepository
-from src.resource import user_blueprint
+from src.models.user import User
+from src.repository.user import UserRepository
+from src.resource.user import user_blueprint
 from src.utils import ResponseGenerator
 
 

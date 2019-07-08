@@ -1,8 +1,8 @@
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
-from .core import app
-from .models import db
+from src.core import app
+from src.models import db
 
 migrate = Migrate(app, db)
 manager = Manager(app)

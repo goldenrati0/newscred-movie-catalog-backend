@@ -6,7 +6,7 @@ from typing import List
 
 from sqlalchemy import inspect
 
-from ..core import db
+from src.core.database import db
 
 
 class BaseModel():

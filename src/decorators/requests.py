@@ -2,7 +2,7 @@ from functools import wraps
 
 from flask import request
 
-from ..utils import ResponseGenerator
+from src.utils import ResponseGenerator
 
 
 def json_data_required(f):

@@ -1,10 +1,11 @@
-from flask import Blueprint, request, redirect, url_for
+from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, current_user
 from flask_restful import Api, Resource
 
-from ..decorators import json_data_required
-from ..repository import UserRepository, UserToken, MovieRepository
-from ..utils import ResponseGenerator
+from src.decorators.requests import json_data_required
+from src.repository.user_token import UserToken
+from src.repository.user import UserRepository, MovieRepository
+from src.utils import ResponseGenerator
 
 user_blueprint = Blueprint(name="userbp", import_name=__name__, url_prefix="/user")
 api = Api(app=user_blueprint)

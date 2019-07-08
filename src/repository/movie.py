@@ -1,7 +1,9 @@
 from typing import Dict, List, Union
 
-from ..models import OMDBClient, FavoriteMovie
-from ..redis_utilities import RedisCacheFactory
+from src.models.movie import Movie
+from src.models.user import FavoriteMovie
+from src.models.omdb import OMDBClient
+from src.redis_utilities import RedisCacheFactory
 
 
 class MovieRepository(object):
@@ -9,7 +11,7 @@ class MovieRepository(object):
     omdb_client = OMDBClient()
 
     @staticmethod
-    def get_movie_info(movie: FavoriteMovie) -> Dict[str, Union[str, int, List, Dict]]:
+    def get_movie_info(movie: Union[FavoriteMovie, Movie]) -> Dict[str, Union[str, int, List, Dict]]:
         cached_movie_data = MovieRepository.redis_movie_cache.get(movie.imdb_id)
         if not cached_movie_data:
             movie_data = MovieRepository.omdb_client.get_full_movie_info(imdb_id=movie.imdb_id)

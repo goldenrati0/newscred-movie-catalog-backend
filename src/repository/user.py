@@ -1,7 +1,7 @@
 from typing import List, Dict, Union
 
-from .movie import MovieRepository
-from ..models import User, FavoriteMovie
+from src.models.user import User, FavoriteMovie
+from src.repository.movie import MovieRepository
 
 
 class UserRepository(object):

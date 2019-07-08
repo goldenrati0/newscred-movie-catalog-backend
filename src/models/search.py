@@ -1,34 +1,20 @@
-from typing import List, Dict
+from typing import List, Dict, Union
 
-from .movie import Movie
-from .omdb import OMDBClient
+from src.models.omdb import OMDBClient
 
 
 class MovieSearch:
-    def __init__(self, omdb_client: OMDBClient = None, **kwargs):
+    def __init__(self, omdb_client: OMDBClient = None):
         if not omdb_client:
             omdb_client = OMDBClient()
         self._client = omdb_client
-        self._s = None
-        self._page = kwargs.get("page", 1)
 
-    def set_query(self, s: str):
-        self._s = s
-        self._page = 1
-
-    def search(self, page: int = 1) -> List[Movie]:
-        if not self._s:
+    def search(self, search_query: str, page: int = 1) -> List[Dict[str, Union[str, int, List, Dict]]]:
+        if not search_query:
             raise Exception("nothing to search for")
 
-        if page != 1:
-            self._page = page
-
-        self._client.set_page(self._page)
-        return self._client.search_movies(self._s)
+        self._client.set_page(page)
+        return self._client.search_movies(search_query)
 
     def search_movie(self, imdb_id: str, **kwargs) -> Dict:
         return self._client.get_full_movie_info(imdb_id=imdb_id, **kwargs)
-
-    def next_page(self) -> List[Movie]:
-        self._page += 1
-        return self.search()

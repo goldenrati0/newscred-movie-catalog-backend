@@ -2,7 +2,7 @@ import pickle
 
 from redis import Redis
 
-from ..core.config import Configuration
+from src.core.config import Configuration
 
 DEFAULT_EXPIRATION_TIME = 10 * 24 * 60 * 60  # 10 days
 

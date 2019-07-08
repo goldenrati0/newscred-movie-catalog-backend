@@ -1,8 +1,8 @@
 import bcrypt
 
-from .base import BaseModel
-from ..core import db
-from ..utils import Generator
+from src.models.base import BaseModel
+from src.core.database import db
+from src.utils import Generator
 
 
 class User(db.Model, BaseModel):

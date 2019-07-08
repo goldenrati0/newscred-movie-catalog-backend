@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 from typing import Dict, Any
 
-from ...utils import Generator
+from src.utils import Generator
 
 
 class FlaskConfig:

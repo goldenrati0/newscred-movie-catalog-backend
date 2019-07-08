@@ -1,10 +1,10 @@
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Union
 
 import requests
 from requests.models import Response
 
-from .movie import Movie, MovieFactory
-from ..core import app
+from src.models.movie import MovieFactory
+from src.core.flask_app import app
 
 
 class OMDBClient(object):
@@ -50,12 +50,15 @@ class OMDBClient(object):
         assert json_res["Response"] == "True", f"invalid response from omdb api, error: {json_res['Error']}"
         return json_res
 
-    def search_movies(self, s: str) -> List[Movie]:
+    def search_movies(self, s: str) -> List[Dict[str, Union[str, int, List, Dict]]]:
         data = self._search_string(s)
         if "Search" not in data:
             return []
 
+        from src.repository.movie import MovieRepository
+        
         movies = MovieFactory.get_movies(data["Search"])
+        movies = [MovieRepository.get_movie_info(movie=movie) for movie in movies]
         return movies
 
     def get_full_movie_info(self, imdb_id: str, plot: str = "full", type: str = "movie") -> Dict:
