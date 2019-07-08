@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response, jsonify, request
+from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, current_user
 from flask_restful import Api, Resource
 
@@ -31,19 +31,25 @@ class UserLogin(Resource):
             return ResponseGenerator.forbidden(msg="email/password combination is invalid")
 
         access_token = UserToken.create_user_access_token(user=user)
-        return make_response(jsonify({
+        return ResponseGenerator.generate_response({
             "access_token": access_token
-        }), 200)
+        }, code=200)
 
 
 class UserProfile(Resource):
 
     @jwt_required
     def get(self):
-        return make_response(jsonify(
-            current_user.json
-        ), 200)
+        return ResponseGenerator.generate_response(current_user.json, code=200)
+
+
+class UserFavMovies(Resource):
+
+    @jwt_required
+    def get(self):
+        return ResponseGenerator.generate_response(list(UserRepository.get_favorite_movies(current_user)), code=200)
 
 
 api.add_resource(UserLogin, "/login")
 api.add_resource(UserProfile, "/me")
+api.add_resource(UserFavMovies, "/me/movies")
