@@ -29,6 +29,7 @@ class UserRepository(object):
 
     @staticmethod
     def get_by_id(id: int) -> User:
+        # TODO: implement mechanism to get user form cache
         return User.query.get(id)
 
     @staticmethod
