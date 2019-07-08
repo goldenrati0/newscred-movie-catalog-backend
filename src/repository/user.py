@@ -46,7 +46,7 @@ class UserRepository(object):
     @staticmethod
     def get_favorite_movies(user: User) -> Set[str]:
         return {
-            movie.imdb_id
+            movie.imdb_movie_id
             for movie in user.rel_favorite_movies
         }
 
