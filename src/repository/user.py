@@ -1,5 +1,6 @@
-from typing import List, Dict, Set
+from typing import List, Dict, Union
 
+from .movie import MovieRepository
 from ..models import User, FavoriteMovie
 
 
@@ -39,22 +40,51 @@ class UserRepository(object):
         ).first()
 
     @staticmethod
+    def get_favorite_movie_by_imdb_id(user: User, imdb_id: str) -> FavoriteMovie:
+        return FavoriteMovie.query.filter(
+            (FavoriteMovie.user_id == user.id) &
+            (FavoriteMovie.imdb_id == imdb_id)
+        ).first()
+
+    @staticmethod
     def add_user_favorite_movie(user: User, imdb_id: str):
+        existing_fav = UserRepository.get_favorite_movie_by_imdb_id(user, imdb_id)
+        if existing_fav:
+            return existing_fav
+
         fav_movie = FavoriteMovie(user_id=user.id, imdb_id=imdb_id)
-        fav_movie.save()
+        return fav_movie.save()
 
     @staticmethod
-    def get_favorite_movies(user: User) -> Set[str]:
-        return {
-            movie.imdb_movie_id
+    def get_users_favorite_movies(user: User) -> List[FavoriteMovie]:
+        movies = [
+            movie
             for movie in user.rel_favorite_movies
-        }
+        ]
+        return movies
 
     @staticmethod
-    def filter_favorite_movies(user: User, movies: List[Dict[str, str]]) -> List[Dict[str, str]]:
-        fav_movies = UserRepository.get_favorite_movies(user)
-        for movie in movies:
-            if movie.get("imdb_id") in fav_movies:
-                movie["favorite"] = True
+    def get_users_favorite_movie_details(user: User) -> List[Dict[str, str]]:
+        fav_movies = UserRepository.get_users_favorite_movies(user=user)
+        movie_details = []
+        for movie in fav_movies:
+            movie_info = MovieRepository.get_movie_info(movie=movie)
+            movie_info["favorite"] = True
+            movie_details.append(movie_info)
 
-        return movies
+        return movie_details
+
+    @staticmethod
+    def add_attribute_to_favorite_movies(user: User, movie_details: Union[List[Dict[str, str]], Dict[str, str]]):
+        fav_movies = UserRepository.get_users_favorite_movies(user=user)
+        fav_movies = {movie.imdb_id for movie in fav_movies}
+
+        if isinstance(movie_details, list):
+            for movie_info in movie_details:
+                if movie_info.get("imdbID") in fav_movies:
+                    movie_info.update({"favorite": True})
+        elif isinstance(movie_details, dict):
+            if movie_details.get("imdbID") in fav_movies:
+                movie_details.update({"favorite": True})
+
+        return movie_details
