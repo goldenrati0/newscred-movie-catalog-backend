@@ -1,7 +1,9 @@
 bcrypt
 Flask
 Flask-CORS
+Flask-JWT-Extended
 Flask-Migrate
+Flask-Restful
 Flask-Script
 Flask-SQLAlchemy
 psycopg2-binary
