@@ -14,7 +14,7 @@ class BaseModel():
         Based on the models columns """
 
     _created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    _updated_at = db.Column(db.DateTime, nullable=False, onupdate=datetime.now)
+    _updated_at = db.Column(db.DateTime, nullable=True, onupdate=datetime.now)
 
     print_filter = ()
     to_json_filter = ()
