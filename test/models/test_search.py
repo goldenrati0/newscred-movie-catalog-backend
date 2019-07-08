@@ -8,7 +8,8 @@ class TestMovieSearch(unittest.TestCase):
 
     def setUp(self) -> None:
         self.omdb_client = OMDBClient(apikey=os.getenv("OMDB_API_KEY"))
-        self.client = MovieSearch(s="godfather", omdb_client=self.omdb_client)
+        self.client = MovieSearch(omdb_client=self.omdb_client)
+        self.client.set_query(s="godfather")
 
     def test_search(self):
         movies = self.client.search()
