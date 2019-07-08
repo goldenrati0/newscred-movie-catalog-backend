@@ -63,10 +63,21 @@ class UserProfile(Resource):
 
 
 class UserFavMovies(Resource):
+    method_decorators = [jwt_required]
 
-    @jwt_required
     def get(self):
         return ResponseGenerator.generate_response(list(UserRepository.get_favorite_movies(current_user)), code=200)
+
+    @json_data_required
+    def post(self):
+        data = request.get_json()
+
+        mandatory_fields = ["imdb_id"]
+        if any(data.get(item) is None for item in mandatory_fields):
+            return ResponseGenerator.mandatory_field(fields=mandatory_fields)
+
+        UserRepository.add_user_favorite_movie(user=current_user, imdb_id=data["imdb_id"])
+        return ResponseGenerator.generate_response(list(UserRepository.get_favorite_movies(current_user)), code=201)
 
 
 api.add_resource(UserRegister, "/register")
