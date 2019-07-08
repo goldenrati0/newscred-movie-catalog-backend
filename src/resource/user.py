@@ -10,6 +10,25 @@ user_blueprint = Blueprint(name="userbp", import_name=__name__, url_prefix="/use
 api = Api(app=user_blueprint)
 
 
+class UserRegister(Resource):
+    method_decorators = [json_data_required]
+
+    def post(self):
+        data = request.get_json()
+
+        mandatory_fields = ["name", "email", "password"]
+        if any(data.get(item) is None for item in mandatory_fields):
+            return ResponseGenerator.mandatory_field(fields=mandatory_fields)
+
+        name, email, password = data.pop("name"), data.pop("email"), data.pop("password")
+        user = UserRepository.create_user(name=name, email=email, password=password, **data)
+
+        access_token = UserToken.create_user_access_token(user=user)
+        return ResponseGenerator.generate_response({
+            "access_token": access_token
+        }, code=201)
+
+
 class UserLogin(Resource):
     method_decorators = [json_data_required]
 
@@ -18,7 +37,7 @@ class UserLogin(Resource):
 
         mandatory_fields = ["email", "password"]
         if any(data.get(item) is None for item in mandatory_fields):
-            return ResponseGenerator.mandatory_field(fields=["email", "password"])
+            return ResponseGenerator.mandatory_field(fields=mandatory_fields)
 
         email = data["email"]
         password = data["password"]
@@ -50,6 +69,7 @@ class UserFavMovies(Resource):
         return ResponseGenerator.generate_response(list(UserRepository.get_favorite_movies(current_user)), code=200)
 
 
+api.add_resource(UserRegister, "/register")
 api.add_resource(UserLogin, "/login")
 api.add_resource(UserProfile, "/me")
 api.add_resource(UserFavMovies, "/me/movies")
