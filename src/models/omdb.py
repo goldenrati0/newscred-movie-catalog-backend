@@ -1,4 +1,5 @@
-from typing import Dict, List, Any, Union
+import json
+from typing import Dict, List, Any, Union, Optional
 
 import requests
 from requests.models import Response
@@ -56,12 +57,16 @@ class OMDBClient(object):
             return []
 
         from src.repository.movie import MovieRepository
-        
-        movies = MovieFactory.get_movies(data["Search"])
-        movies = [MovieRepository.get_movie_info(movie=movie) for movie in movies]
-        return movies
 
-    def get_full_movie_info(self, imdb_id: str, plot: str = "full", type: str = "movie") -> Dict:
+        movies = MovieFactory.get_movies(data["Search"])
+        movie_details = []
+        for movie in movies:
+            movie_info = MovieRepository.get_movie_info(movie=movie)
+            if movie_info:
+                movie_details.append(movie_info)
+        return movie_details
+
+    def get_full_movie_info(self, imdb_id: str, plot: str = "full", type: str = "movie") -> Optional[Dict]:
         url = self._base_url
         params = {
             "apikey": self._apikey,
@@ -71,4 +76,7 @@ class OMDBClient(object):
         }
         response = requests.get(url, params=params)
         response.raise_for_status()
-        return response.json()
+        try:
+            return response.json()
+        except json.decoder.JSONDecodeError as _e:
+            return None
