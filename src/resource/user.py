@@ -23,6 +23,8 @@ class UserRegister(Resource):
 
         name, email, password = data.pop("name"), data.pop("email"), data.pop("password")
         user = UserRepository.create_user(name=name, email=email, password=password, **data)
+        if not user:
+            return ResponseGenerator.error_response(msg="Email is already registered, try to login", code=400)
 
         access_token = UserToken.create_user_access_token(user=user)
         return ResponseGenerator.generate_response({

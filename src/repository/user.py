@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Optional
 
 from src.models.user import User, FavoriteMovie
 from src.repository.movie import MovieRepository
@@ -7,10 +7,10 @@ from src.repository.movie import MovieRepository
 class UserRepository(object):
 
     @staticmethod
-    def create_user(name: str, email: str, password: str, **kwargs) -> User:
+    def create_user(name: str, email: str, password: str, **kwargs) -> Optional[User]:
         existing_user = UserRepository.get_by_email(email)
         if existing_user:
-            return existing_user
+            return None
 
         new_user = User(name, email, password, **kwargs)
         return new_user.save()
