@@ -79,6 +79,9 @@ class UserFavMovies(Resource):
             return ResponseGenerator.mandatory_field(fields=mandatory_fields)
 
         fav_movie = UserRepository.add_user_favorite_movie(user=current_user, imdb_id=data["imdb_id"])
+        if not fav_movie:
+            return ResponseGenerator.generate_response(data={"msg": "disliked"}, code=204)
+
         fav_movie = MovieRepository.get_movie_info(fav_movie)
         return ResponseGenerator.generate_response(data=fav_movie, code=201)
 

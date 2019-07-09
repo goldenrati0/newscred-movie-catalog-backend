@@ -50,7 +50,8 @@ class UserRepository(object):
     def add_user_favorite_movie(user: User, imdb_id: str):
         existing_fav = UserRepository.get_favorite_movie_by_imdb_id(user, imdb_id)
         if existing_fav:
-            return existing_fav
+            existing_fav.delete()
+            return None
 
         fav_movie = FavoriteMovie(user_id=user.id, imdb_id=imdb_id)
         return fav_movie.save()
