@@ -1,5 +1,5 @@
 # newscred-movie-catalog-backend
-This is a personal movie catalog website's backend, written using Python. This application expose a RESTful api and capable of
+This is a personal movie catalog website's backend, written using Python. This application exposes a RESTful api and capable of
 - Registering Users
 - Authenticating Users
 - Searching for movies
